@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pwd/res/Strings.dart';
+import 'package:flutter_pwd/res/strings.dart';
 import 'package:flutter_pwd/ui/pages/main/main_page.dart';
 import 'package:flutter_pwd/ui/pages/splash/splash_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,9 +18,15 @@ class _MyAppState extends State<MyApp> {
   Locale _locale;
 
   @override
+  void initState() {
+    super.initState();
+    setLocalizedValues(localizedValues);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: AppUtils.getString(context, Ids.appName),
+      onGenerateTitle: (context) => AppUtils.getString(context, Ids.appName),
       routes: {Routers.home: (ctx) => MainPage()},
       theme: ThemeData(
         primarySwatch: Colors.blue,

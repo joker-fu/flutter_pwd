@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pwd/res/Strings.dart';
+import 'package:flutter_pwd/res/strings.dart';
 import 'package:flutter_pwd/utils/app_utils.dart';
+
+import 'home/home_page.dart';
+import 'me/me_page.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -11,6 +14,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   var _currentIndex = 0;
+  var _bodyWidgets = [HomePage(), MePage()];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -24,14 +28,16 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text(AppUtils.getString(context, Ids.appName)),
       ),
-      body: Center(
-        child: Text('Center'),
-      ),
+      body: _bodyWidgets.elementAt(_currentIndex),
       bottomNavigationBar: BottomNavigationBar(
         onTap: _onItemTapped,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text(AppUtils.getString(context, Ids.appHome))),
-          BottomNavigationBarItem(icon: Icon(Icons.account_box), title: Text(AppUtils.getString(context, Ids.appMe))),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              title: Text(AppUtils.getString(context, Ids.appHome))),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_box),
+              title: Text(AppUtils.getString(context, Ids.appMe))),
         ],
         currentIndex: _currentIndex,
         selectedFontSize: 14.0,
