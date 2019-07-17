@@ -51,12 +51,12 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: _renderItem,
         itemCount: 20,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: "new",
-        child: Icon(Icons.add),
-        isExtended: true,
-      ),
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: () {},
+//        tooltip: "new",
+//        child: Icon(Icons.add),
+//        isExtended: true,
+//      ),
     );
   }
 }
