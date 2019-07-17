@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pwd/res/dimens.dart';
 import 'package:flutter_pwd/res/strings.dart';
 import 'package:flutter_pwd/utils/app_utils.dart';
 
@@ -40,8 +41,9 @@ class _MainPageState extends State<MainPage> {
               title: Text(AppUtils.getString(context, Ids.appMe))),
         ],
         currentIndex: _currentIndex,
-        selectedFontSize: 14.0,
-        unselectedFontSize: 14.0,
+        selectedFontSize: Dimens.sp14,
+        unselectedFontSize: Dimens.sp14,
+        backgroundColor: Colors.white,
       ),
     );
   }

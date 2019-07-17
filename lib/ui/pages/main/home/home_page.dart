@@ -48,9 +48,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.builder(
-        itemBuilder: (context, index) {
-          return _renderItem(context, index);
-        },
+        itemBuilder: _renderItem,
         itemCount: 20,
       ),
       floatingActionButton: FloatingActionButton(
