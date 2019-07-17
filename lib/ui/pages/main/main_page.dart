@@ -5,6 +5,7 @@ import 'package:flutter_pwd/ui/widget/bottom_app_bar_item.dart';
 import 'package:flutter_pwd/utils/app_utils.dart';
 import 'package:flutter_pwd/utils/router_utils.dart';
 
+import 'home/edit_page.dart';
 import 'home/home_page.dart';
 import 'me/me_page.dart';
 
@@ -58,7 +59,7 @@ class _MainPageState extends State<MainPage> {
               icon: Icons.home,
               name: AppUtils.getString(context, Ids.appHome),
               selectedColor: Colors.blue,
-              unselectedColor: Colors.black87,
+              unselectedColor: Colors.black54,
               selected: _currentIndex == 0,
               onTap: () => _onItemTapped(0),
             ),
@@ -66,7 +67,7 @@ class _MainPageState extends State<MainPage> {
               icon: Icons.account_box,
               name: AppUtils.getString(context, Ids.appMe),
               selectedColor: Colors.blue,
-              unselectedColor: Colors.black87,
+              unselectedColor: Colors.black54,
               selected: _currentIndex == 1,
               onTap: () => _onItemTapped(1),
             ),
@@ -75,7 +76,7 @@ class _MainPageState extends State<MainPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //RouteUtils.pushReplacementNamed(context, );
+          RouteUtils.push(context, EditPage());
         },
         tooltip: 'new',
         child: Icon(Icons.add),
