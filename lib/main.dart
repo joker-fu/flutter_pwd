@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_pwd/res/strings.dart';
 import 'package:flutter_pwd/ui/pages/main/main_page.dart';
 import 'package:flutter_pwd/ui/pages/splash/splash_page.dart';
@@ -7,7 +10,14 @@ import 'package:flutter_pwd/common/constant/Constants.dart';
 import 'package:flutter_pwd/utils/app_utils.dart';
 import 'common/localization/app_localizations.dart';
 
-void main() => runApp(MyApp());
+void main(){
+  runApp(MyApp());
+  //去掉状态栏透明层
+  if (Platform.isAndroid) {
+    var style = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+    SystemChrome.setSystemUIOverlayStyle(style);
+  }
+}
 
 class MyApp extends StatefulWidget {
   @override

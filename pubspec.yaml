@@ -32,6 +32,10 @@ dependencies:
   # local_auth https://github.com/flutter/plugins/tree/master/packages/local_auth
   local_auth: ^0.4.0+1
 
+  # sqflite https://github.com/tekartik/sqflite
+  sqflite: ^1.1.6
+
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
