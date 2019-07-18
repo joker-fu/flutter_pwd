@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
               height: Dimens.dp8,
             ),
             Text(
-              '密码：${item.password}',
+              '密码：${item.visible ? item.password : '********'}',
               style: TextStyle(color: Colors.black87, fontSize: Dimens.sp16),
             ),
           ],
@@ -54,13 +54,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _pwProvider.open().then((_) {
-      _pwProvider.getAll().then((list) {
+      _pwProvider.queryAll().then((list) {
         setState(() {
           data = list;
         });
-        for (var item in list) {
-          print('${item.title}-${item.account}-${item.password}');
-        }
       });
     });
   }
@@ -76,7 +73,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: ListView.builder(
         itemBuilder: _renderItem,
-        itemCount: data.length,
+        itemCount: data == null ? 0 : data.length,
       ),
 //      floatingActionButton: FloatingActionButton(
 //        onPressed: () {},

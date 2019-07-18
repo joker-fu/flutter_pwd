@@ -11,10 +11,10 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  PasswordProvider _pwProvider = PasswordProvider();
-
   bool _isObscure = true;
+  bool _isHide = true;
   Color _eyeColor = Colors.grey;
+  PasswordProvider _pwProvider = PasswordProvider();
 
   TextEditingController _infoController = TextEditingController();
   TextEditingController _accountController = TextEditingController();
@@ -27,7 +27,7 @@ class _EditPageState extends State<EditPage> {
       String info = _infoController.value.text.toString().trim();
       String account = _accountController.value.text.toString().trim();
       String pwd = _passwordController.value.text.toString().trim();
-      _pwProvider.insert(PasswordItem(info, account, pwd, true)).then((value) {
+      _pwProvider.insert(PasswordItem(info, account, pwd, !_isHide)).then((value) {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text('${value.title}添加成功'),
         ));
@@ -149,32 +149,51 @@ class _EditPageState extends State<EditPage> {
                   ],
                 ),
                 SizedBox(
+                  height: Dimens.dp16,
+                ),
+                CheckboxListTile(
+                  value: _isHide,
+                  title: Text(
+                    '隐藏密码：',
+                    style: TextStyle(color: Colors.grey, fontSize: Dimens.sp14),
+                  ),
+                  onChanged: (bool) {
+                    setState(() {
+                      _isHide = bool;
+                    });
+                  },
+                ),
+                SizedBox(
                   height: Dimens.dp100,
                 ),
-                Center(
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Builder(builder: (context) {
-                          return RaisedButton(
-                            onPressed: () => _save(context),
-                            color: Colors.blue,
-                            textColor: Colors.white,
-                            disabledColor: Colors.grey,
-                            disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(Dimens.dp8),
-                            splashColor: Colors.blueAccent,
-                            child: Text('保存'),
-                          );
-                        }),
-                      )
-                    ],
-                  ),
-                )
+                _renderSaveButton(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _renderSaveButton() {
+    return Center(
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Builder(builder: (context) {
+              return RaisedButton(
+                onPressed: () => _save(context),
+                color: Colors.blue,
+                textColor: Colors.white,
+                disabledColor: Colors.grey,
+                disabledTextColor: Colors.black,
+                padding: EdgeInsets.all(Dimens.dp8),
+                splashColor: Colors.blueAccent,
+                child: Text('保存'),
+              );
+            }),
+          )
+        ],
       ),
     );
   }

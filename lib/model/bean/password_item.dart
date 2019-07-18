@@ -46,7 +46,7 @@ class PasswordProvider {
       await db.execute('''
         create table $tablePw ( 
           $cId integer primary key autoincrement, 
-          $cTitle text not null,
+          $cTitle text not null unique,
           $cAccount text not null,
           $cPassword text not null,
           $cVisible integer not null)
@@ -61,7 +61,18 @@ class PasswordProvider {
     return item;
   }
 
-  Future<List<PasswordItem>> getAll() async {
+  Future<PasswordItem> query(PasswordItem item) async {
+    List<Map<String, dynamic>> maps = await db.query(tablePw,
+        columns: [cId, cTitle, cAccount, cPassword, cVisible],
+        where: "$cTitle = ?",
+        whereArgs: [item.title]);
+    if (maps.isNotEmpty) {
+      return PasswordItem.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  Future<List<PasswordItem>> queryAll() async {
     List<Map<String, dynamic>> maps = await db
         .query(tablePw, columns: [cId, cTitle, cAccount, cPassword, cVisible]);
     if (maps.length > 0) {
