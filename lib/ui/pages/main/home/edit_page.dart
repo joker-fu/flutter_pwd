@@ -27,11 +27,13 @@ class _EditPageState extends State<EditPage> {
       String info = _infoController.value.text.toString().trim();
       String account = _accountController.value.text.toString().trim();
       String pwd = _passwordController.value.text.toString().trim();
-      _pwProvider.insert(PasswordItem(info, account, pwd, !_isHide)).then((value) {
+      _pwProvider
+          .insert(PasswordItem(info, account, pwd, !_isHide))
+          .then((value) {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text('${value.title}添加成功'),
         ));
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(value);
       });
     }
   }
@@ -81,6 +83,7 @@ class _EditPageState extends State<EditPage> {
                         controller: _infoController,
                         autofocus: true,
                         keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
                         validator: (value) =>
                             value.isEmpty ? '请输入网站/应用信息' : null,
                         decoration: InputDecoration(
@@ -104,6 +107,7 @@ class _EditPageState extends State<EditPage> {
                         controller: _accountController,
                         validator: (value) => value.isEmpty ? '请输入账号' : null,
                         keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
                           labelText: '账号',
                           hintText: '账号',
@@ -126,6 +130,9 @@ class _EditPageState extends State<EditPage> {
                         obscureText: _isObscure,
                         validator: (value) => value.isEmpty ? '请输入密码' : null,
                         scrollPadding: EdgeInsets.all(10),
+                        onEditingComplete: () => Builder(builder: (context) {
+                          return _save(context);
+                        }),
                         decoration: InputDecoration(
                             labelText: '密码',
                             hintText: '密码',

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pwd/res/dimens.dart';
 import 'package:flutter_pwd/res/strings.dart';
+import 'package:flutter_pwd/ui/pages/main/home/edit_page.dart';
+import 'package:flutter_pwd/ui/pages/main/home/home_page.dart';
+import 'package:flutter_pwd/ui/pages/main/me/me_page.dart';
 import 'package:flutter_pwd/ui/widget/bottom_app_bar_item.dart';
 import 'package:flutter_pwd/utils/app_utils.dart';
 import 'package:flutter_pwd/utils/router_utils.dart';
-
-import 'home/edit_page.dart';
-import 'home/home_page.dart';
-import 'me/me_page.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -18,7 +17,8 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   var _currentIndex = 0;
-  var _bodyWidgets = [HomePage(), MePage()];
+  final GlobalKey<HomePageState> hpKey = GlobalKey<HomePageState>();
+  final List<Widget> _bodyWidgets = List();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -37,6 +37,13 @@ class _MainPageState extends State<MainPage> {
                 onPressed: null)
           ]
         : <Widget>[];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _bodyWidgets.add(HomePage(key: hpKey));
+    _bodyWidgets.add(MePage());
   }
 
   @override
@@ -76,7 +83,9 @@ class _MainPageState extends State<MainPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          RouteUtils.push(context, EditPage());
+          RouteUtils.push(context, EditPage()).then((value) {
+            hpKey.currentState.addData(value);
+          });
         },
         tooltip: 'new',
         child: Icon(Icons.add),

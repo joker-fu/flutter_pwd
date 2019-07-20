@@ -15,7 +15,12 @@ class CommonDialog {
                     Navigator.of(context).pop();
                   },
                   child: Text("取消")),
-              FlatButton(onPressed: onYes, child: Text("确定"))
+              FlatButton(
+                  onPressed: () {
+                    onYes();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("确定"))
             ],
           );
         });

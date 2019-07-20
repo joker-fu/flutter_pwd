@@ -10,7 +10,7 @@ class RouteUtils {
     Navigator.of(context).pushReplacementNamed(pageName);
   }
 
-  static void push(BuildContext context, Widget page) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => page));
+  static Future<dynamic> push(BuildContext context, Widget page) {
+    return Navigator.of(context).push(MaterialPageRoute(builder: (context) => page));
   }
 }

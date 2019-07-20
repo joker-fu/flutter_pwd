@@ -46,7 +46,7 @@ class PasswordProvider {
       await db.execute('''
         create table $tablePw ( 
           $cId integer primary key autoincrement, 
-          $cTitle text not null unique,
+          $cTitle text not null,
           $cAccount text not null,
           $cPassword text not null,
           $cVisible integer not null)
@@ -77,9 +77,13 @@ class PasswordProvider {
         .query(tablePw, columns: [cId, cTitle, cAccount, cPassword, cVisible]);
     if (maps.length > 0) {
       List<PasswordItem> list = List();
-      for (var item in maps) {
-        list.add(PasswordItem.fromMap(item));
+//      for (var item in maps) {
+//        list.add(PasswordItem.fromMap(item));
+//      }
+      for (int i = maps.length; i > 0; i--) {
+        list.add(PasswordItem.fromMap(maps[i - 1]));
       }
+
       return list;
     }
     return null;
