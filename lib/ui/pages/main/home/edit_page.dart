@@ -46,7 +46,7 @@ class _EditPageState extends State<EditPage> {
 
   @override
   void dispose() {
-    _pwProvider.close();
+   // _pwProvider.close();
     super.dispose();
   }
 
