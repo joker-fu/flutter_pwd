@@ -84,7 +84,7 @@ class _MainPageState extends State<MainPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           RouteUtils.push(context, EditPage()).then((value) {
-            hpKey.currentState.addData(value);
+            if (value != null) hpKey.currentState.addData(value);
           });
         },
         tooltip: 'new',

@@ -25,53 +25,52 @@ class HomePageState extends State<HomePage> {
 
   Widget _renderItem(BuildContext context, int index) {
     PasswordItem item = _data[index];
-    return InkWell(
-      onTap: () => print('tap'),
-      onLongPress: () => _longPress(context, item),
-      child: CommonCard(
-        child: Padding(
-          padding: EdgeInsets.all(Dimens.dp12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                item.title,
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: Dimens.sp18,
-                    fontWeight: FontWeight.w400),
-              ),
-              SizedBox(
-                height: Dimens.dp16,
-              ),
-              Text(
-                '账号：${item.account}',
-                style: TextStyle(color: Colors.black87, fontSize: Dimens.sp16),
-              ),
-              SizedBox(
-                height: Dimens.dp8,
-              ),
-              Text(
-                '密码：${item.visible ? item.password : '********'}',
-                style: TextStyle(color: Colors.black87, fontSize: Dimens.sp16),
-              ),
-            ],
-          ),
-        ),
-      ),
+    return CommonCard(
+      child: InkWell(
+          onTap: () => _tap(context, item),
+          onLongPress: () => _longPress(context, item),
+          child: Padding(
+            padding: EdgeInsets.all(Dimens.dp12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  item.title,
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: Dimens.sp18,
+                      fontWeight: FontWeight.w400),
+                ),
+                SizedBox(
+                  height: Dimens.dp16,
+                ),
+                Text(
+                  '账号：${item.account}',
+                  style:
+                      TextStyle(color: Colors.black87, fontSize: Dimens.sp16),
+                ),
+                SizedBox(
+                  height: Dimens.dp8,
+                ),
+                Text(
+                  '密码：${item.visible ? item.password : '********'}',
+                  style:
+                      TextStyle(color: Colors.black87, fontSize: Dimens.sp16),
+                ),
+              ],
+            ),
+          )),
     );
   }
 
   @override
   void initState() {
     super.initState();
-//    _pwProvider.open().then((_) {
     _pwProvider.queryAll().then((list) {
       setState(() {
         _data = list;
       });
     });
-//    });
   }
 
   @override
@@ -87,16 +86,25 @@ class HomePageState extends State<HomePage> {
         itemBuilder: _renderItem,
         itemCount: _data == null ? 0 : _data.length,
       ),
-//      floatingActionButton: FloatingActionButton(
-//        onPressed: () {},
-//        tooltip: "new",
-//        child: Icon(Icons.add),
-//        isExtended: true,
-//      ),
     );
   }
 
-  _longPress(BuildContext context, PasswordItem item) {
+  void _tap(BuildContext context, PasswordItem item) {
+    CommonDialog.show(
+      context,
+      Text('确定删除${item.title}记录'),
+      onYes: () {
+        _pwProvider.delete(item.id).then((value) {
+          setState(() {
+            _data.remove(item);
+          });
+          Scaffold.of(context).showSnackBar(SnackBar(content: Text('删除成功')));
+        });
+      },
+    );
+  }
+
+  void _longPress(BuildContext context, PasswordItem item) {
     CommonDialog.show(
       context,
       Text('确定删除${item.title}记录'),
