@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pwd/res/dimens.dart';
+import 'package:flutter_pwd/ui/pages/main/me/safe_setting_page.dart';
+import 'package:flutter_pwd/utils/router_utils.dart';
 
 class MePage extends StatefulWidget {
   @override
@@ -30,15 +32,21 @@ class _MePageState extends State<MePage> {
             height: 10,
           )
         : InkWell(
-            onTap: () {},
+            onTap: () => RouteUtils.push(context, SafeSettingPage()),
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: Dimens.dp10, horizontal: Dimens.dp16),
+              padding: EdgeInsets.symmetric(
+                  vertical: Dimens.dp10, horizontal: Dimens.dp16),
               height: Dimens.dp50,
               color: Colors.white,
-              child: Row(children: <Widget>[
-                Expanded(child: Text(routeNames.elementAt(index))),
-                Icon(Icons.keyboard_arrow_right,color: Colors.grey,)
-              ],),
+              child: Row(
+                children: <Widget>[
+                  Expanded(child: Text(routeNames.elementAt(index))),
+                  Icon(
+                    Icons.keyboard_arrow_right,
+                    color: Colors.grey,
+                  )
+                ],
+              ),
             ));
   }
 }
