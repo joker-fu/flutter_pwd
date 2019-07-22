@@ -54,14 +54,24 @@ class PasswordProvider {
     });
   }
 
-  Future close() async => db.close();
+  Future close() async {
+    if (db != null) {
+      db.close();
+    }
+  }
 
   Future<PasswordItem> insert(PasswordItem item) async {
+    if (db == null) {
+      await open();
+    }
     item.id = await db.insert(tablePw, item.toMap());
     return item;
   }
 
   Future<PasswordItem> query(PasswordItem item) async {
+    if (db == null) {
+      await open();
+    }
     List<Map<String, dynamic>> maps = await db.query(tablePw,
         columns: [cId, cTitle, cAccount, cPassword, cVisible],
         where: "$cTitle = ?",
@@ -73,13 +83,13 @@ class PasswordProvider {
   }
 
   Future<List<PasswordItem>> queryAll() async {
+    if (db == null) {
+      await open();
+    }
     List<Map<String, dynamic>> maps = await db
         .query(tablePw, columns: [cId, cTitle, cAccount, cPassword, cVisible]);
     if (maps.length > 0) {
       List<PasswordItem> list = List();
-//      for (var item in maps) {
-//        list.add(PasswordItem.fromMap(item));
-//      }
       for (int i = maps.length; i > 0; i--) {
         list.add(PasswordItem.fromMap(maps[i - 1]));
       }
@@ -90,10 +100,16 @@ class PasswordProvider {
   }
 
   Future<int> delete(int id) async {
+    if (db == null) {
+      await open();
+    }
     return await db.delete(tablePw, where: "$cId = ?", whereArgs: [id]);
   }
 
   Future<int> update(PasswordItem item) async {
+    if (db == null) {
+      await open();
+    }
     return await db
         .update(tablePw, item.toMap(), where: "$cId = ?", whereArgs: [item.id]);
   }

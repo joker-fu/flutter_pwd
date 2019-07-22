@@ -38,15 +38,15 @@ class _EditPageState extends State<EditPage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _pwProvider.open();
-  }
+//  @override
+//  void initState() {
+//    super.initState();
+//    _pwProvider.open();
+//  }
 
   @override
   void dispose() {
-   // _pwProvider.close();
+    _pwProvider.close();
     super.dispose();
   }
 

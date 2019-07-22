@@ -65,13 +65,13 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _pwProvider.open().then((_) {
-      _pwProvider.queryAll().then((list) {
-        setState(() {
-          _data = list;
-        });
+//    _pwProvider.open().then((_) {
+    _pwProvider.queryAll().then((list) {
+      setState(() {
+        _data = list;
       });
     });
+//    });
   }
 
   @override
