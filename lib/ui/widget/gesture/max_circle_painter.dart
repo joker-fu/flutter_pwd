@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_pwd/ui/widget/gesture/gesture_password.dart';
+import 'package:flutter_pwd/ui/widget/gesture/max_gesture_password.dart';
 
-class CircleItemPainter extends CustomPainter {
-  CircleItemPainter(
+class MaxCirclePainter extends CustomPainter {
+  MaxCirclePainter(
       this.itemAttribute, this.touchPoint, this.circleList, this.lineList);
 
   final Offset touchPoint;
@@ -65,5 +65,5 @@ class CircleItemPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CircleItemPainter old) => true;
+  bool shouldRepaint(MaxCirclePainter old) => true;
 }

@@ -3,30 +3,32 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_pwd/ui/widget/gesture/circle_item_painter.dart';
+import 'package:flutter_pwd/ui/widget/gesture/max_circle_painter.dart';
 
-class GesturePassword extends StatefulWidget {
+class MaxGesturePassword extends StatefulWidget {
   final ValueChanged<String> successCallback;
   final ValueChanged<String> selectedCallback;
   final VoidCallback failCallback;
   final ItemAttribute attribute;
   final double height;
   final double width;
+  final int minPoint;
 
-  GesturePassword({
+  MaxGesturePassword({
     @required this.successCallback,
     this.failCallback,
     this.selectedCallback,
     this.attribute: ItemAttribute.normalAttribute,
     this.height: 300.0,
     this.width,
+    this.minPoint = 4,
   });
 
   @override
-  _GesturePasswordState createState() => new _GesturePasswordState();
+  _MaxGesturePasswordState createState() => new _MaxGesturePasswordState();
 }
 
-class _GesturePasswordState extends State<GesturePassword> {
+class _MaxGesturePasswordState extends State<MaxGesturePassword> {
   Offset touchPoint = Offset.zero;
   List<Circle> circleList = new List<Circle>();
   List<Circle> lineList = new List<Circle>();
@@ -91,8 +93,7 @@ class _GesturePasswordState extends State<GesturePassword> {
         setState(() {
           if (circleList
                   .where((Circle itemCircle) => itemCircle.isSelected())
-                  .length >=
-              4) {
+                  .length >= widget.minPoint) {
             widget.successCallback(getPassword());
           } else {
             if (widget.failCallback != null) {
@@ -109,7 +110,7 @@ class _GesturePasswordState extends State<GesturePassword> {
       },
       child: new CustomPaint(
           size: size,
-          painter: new CircleItemPainter(
+          painter: new MaxCirclePainter(
             widget.attribute,
             touchPoint,
             circleList,

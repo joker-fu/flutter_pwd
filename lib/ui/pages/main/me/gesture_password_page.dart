@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pwd/ui/widget/gesture/gesture_password.dart';
-import 'package:flutter_pwd/ui/widget/gesture/mini_gesture_password.dart';
+import 'package:flutter_pwd/ui/widget/gesture/max_gesture_password.dart';
+import 'package:flutter_pwd/ui/widget/gesture/min_gesture_password.dart';
 
 class GesturePasswordPage extends StatefulWidget {
   @override
@@ -23,7 +23,7 @@ class _GesturePasswordPageState extends State<GesturePasswordPage> {
           Center(child: MiniGesturePassword(key: miniGesturePassword)),
           Container(
             margin: const EdgeInsets.only(top: 100.0),
-            child: GesturePassword(
+            child: MaxGesturePassword(
               successCallback: (s) {
                 print("successCallback$s");
                 scaffoldState.currentState?.showSnackBar(SnackBar(

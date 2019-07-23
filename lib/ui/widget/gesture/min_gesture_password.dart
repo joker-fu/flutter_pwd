@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_pwd/ui/widget/gesture/mini_circle_view.dart';
+import 'package:flutter_pwd/ui/widget/gesture/min_circle_painter.dart';
 
 class MiniGesturePassword extends StatefulWidget {
   final MiniItemAttribute attribute;
@@ -47,7 +47,7 @@ class MiniGesturePasswordState extends State<MiniGesturePassword> {
       child: new CustomPaint(
           size: size,
           painter:
-              new MiniCircleView(widget.attribute, circleList, selectedStr)),
+              new MinCirclePainter(widget.attribute, circleList, selectedStr)),
     );
   }
 }
@@ -81,6 +81,7 @@ class Circle {
 class MiniItemAttribute {
   final Color selectedColor;
   final Color normalColor;
+  final double lineStrokeWidth;
   final double smallCircleR;
   static const MiniItemAttribute normalAttribute = const MiniItemAttribute(
       normalColor: const Color(0xFFBBDEFB),
@@ -89,6 +90,7 @@ class MiniItemAttribute {
   const MiniItemAttribute({
     this.normalColor,
     this.selectedColor,
+    this.lineStrokeWidth = 1.0,
     this.smallCircleR: 6.0,
   });
 }

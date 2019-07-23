@@ -75,7 +75,9 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
               setState(() {
                 _useGesture = value;
               });
-              RouteUtils.push(context, GesturePasswordPage());
+              if (_useGesture) {
+                RouteUtils.push(context, GesturePasswordPage());
+              }
             }),
           ],
         ),
