@@ -8,8 +8,8 @@ class MiniGesturePassword extends StatefulWidget {
 
   MiniGesturePassword(
       {Key key,
-        this.attribute: MiniItemAttribute.normalAttribute,
-        this.height: 60.0})
+      this.attribute: MiniItemAttribute.normalAttribute,
+      this.height: 60.0})
       : super(key: key);
 
   @override
@@ -47,7 +47,7 @@ class MiniGesturePasswordState extends State<MiniGesturePassword> {
       child: new CustomPaint(
           size: size,
           painter:
-          new MiniCircleView(widget.attribute, circleList, selectedStr)),
+              new MiniCircleView(widget.attribute, circleList, selectedStr)),
     );
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pwd/res/dimens.dart';
 import 'package:flutter_pwd/res/strings.dart';
+import 'package:flutter_pwd/ui/pages/main/me/gesture_password_page.dart';
 import 'package:flutter_pwd/utils/app_utils.dart';
+import 'package:flutter_pwd/utils/router_utils.dart';
 
 class SafeSettingPage extends StatefulWidget {
   @override
@@ -9,11 +11,14 @@ class SafeSettingPage extends StatefulWidget {
 }
 
 class _SafeSettingPageState extends State<SafeSettingPage> {
-  _renderItem(IconData icon, String id, VoidCallback onTap) {
+  bool _useFinger = false;
+  bool _useGesture = false;
+
+  Widget _renderItem(
+      IconData icon, String id, bool status, ValueChanged<bool> onChanged) {
     return Container(
       color: Colors.white,
       child: InkWell(
-        onTap: () {},
         child: Padding(
           padding: EdgeInsets.symmetric(
             vertical: Dimens.dp12,
@@ -27,8 +32,8 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
               ),
               Expanded(child: Text(AppUtils.getString(context, id))),
               Switch(
-                value: false,
-                onChanged: (bool) {},
+                value: status,
+                onChanged: onChanged,
               ),
             ],
           ),
@@ -57,9 +62,21 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
               ),
               child: Text(AppUtils.getString(context, Ids.setUnlockMethod)),
             ),
-            _renderItem(Icons.fingerprint, Ids.fingerprint, () {}),
-            Divider(height: Dimens.dp1_2,),
-            _renderItem(Icons.apps, Ids.gesture, () {}),
+            _renderItem(Icons.fingerprint, Ids.fingerprint, _useFinger,
+                (value) {
+              setState(() {
+                _useFinger = value;
+              });
+            }),
+            Divider(
+              height: Dimens.dp1_2,
+            ),
+            _renderItem(Icons.apps, Ids.gesture, _useGesture, (value) {
+              setState(() {
+                _useGesture = value;
+              });
+              RouteUtils.push(context, GesturePasswordPage());
+            }),
           ],
         ),
       ),

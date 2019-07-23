@@ -13,14 +13,14 @@ class GesturePassword extends StatefulWidget {
   final double height;
   final double width;
 
-  GesturePassword(
-      {@required this.successCallback,
-        this.failCallback,
-        this.selectedCallback,
-        this.attribute: ItemAttribute.normalAttribute,
-        this.height: 300.0,
-        this.width,
-      });
+  GesturePassword({
+    @required this.successCallback,
+    this.failCallback,
+    this.selectedCallback,
+    this.attribute: ItemAttribute.normalAttribute,
+    this.height: 300.0,
+    this.width,
+  });
 
   @override
   _GesturePasswordState createState() => new _GesturePasswordState();
@@ -33,7 +33,8 @@ class _GesturePasswordState extends State<GesturePassword> {
 
   @override
   void initState() {
-    num hor = (widget.width??MediaQueryData.fromWindow(ui.window).size.width) / 6;
+    num hor =
+        (widget.width ?? MediaQueryData.fromWindow(ui.window).size.width) / 6;
     num ver = widget.height / 6;
     //每个圆的中心点
     for (int i = 0; i < 9; i++) {
@@ -47,7 +48,8 @@ class _GesturePasswordState extends State<GesturePassword> {
   @override
   Widget build(BuildContext context) {
     var size = new Size(
-        widget.width??MediaQueryData.fromWindow(ui.window).size.width, widget.height);
+        widget.width ?? MediaQueryData.fromWindow(ui.window).size.width,
+        widget.height);
     return new GestureDetector(
       onPanUpdate: (DragUpdateDetails details) {
         setState(() {
@@ -62,26 +64,34 @@ class _GesturePasswordState extends State<GesturePassword> {
           }
           Circle circle = getOuterCircle(touchPoint);
           if (circle != null) {
-//            print('circle.isUnSelected()${circle.isUnSelected()}');
+            //判断是否有中间点
+            if (lineList.isNotEmpty) {
+              Circle middleCircle = getMiddleCircle(circle);
+              if (middleCircle != null && middleCircle.isUnSelected()) {
+                lineList.add(middleCircle);
+                middleCircle.setState(Circle.CIRCLE_SELECTED);
+                if (widget.selectedCallback != null) {
+                  widget.selectedCallback(getPassword());
+                }
+              }
+            }
+            //判断当前点
             if (circle.isUnSelected()) {
               lineList.add(circle);
               circle.setState(Circle.CIRCLE_SELECTED);
               if (widget.selectedCallback != null) {
                 widget.selectedCallback(getPassword());
               }
-
-//              print('circle.isUnSelected()2222${circle.isUnSelected()}');
             }
           }
           print(lineList.length);
-//          print(lineList.map((f)=>f.offset));
         });
       },
       onPanEnd: (DragEndDetails details) {
         setState(() {
           if (circleList
-              .where((Circle itemCircle) => itemCircle.isSelected())
-              .length >=
+                  .where((Circle itemCircle) => itemCircle.isSelected())
+                  .length >=
               4) {
             widget.successCallback(getPassword());
           } else {
@@ -120,6 +130,27 @@ class _GesturePasswordState extends State<GesturePassword> {
     return null;
   }
 
+  ///添加中间点
+  Circle getMiddleCircle(Circle circle) {
+    final Circle lastCircle = lineList.last;
+    if (lastCircle == circle) {
+      return null;
+    }
+    for (int i = 0; i < 9; i++) {
+      final Circle tempCircle = circleList[i];
+      if (tempCircle == circle || tempCircle == lastCircle) {
+        continue;
+      }
+      if (tempCircle.offset.dx.abs() ==
+              (lastCircle.offset.dx.abs() + circle.offset.dx.abs()) / 2.0 &&
+          tempCircle.offset.dy.abs() ==
+              (lastCircle.offset.dy.abs() + circle.offset.dy.abs()) / 2.0) {
+        return tempCircle;
+      }
+    }
+    return null;
+  }
+
   String getPassword() {
     return lineList
         .map((selectedItem) => selectedItem.index.toString())
@@ -153,6 +184,16 @@ class Circle {
 
   bool isUnSelected() {
     return state == CIRCLE_NORMAL;
+  }
+
+  @override
+  bool operator ==(other) {
+    // 判断是否是非
+    if (other is! Circle) {
+      return false;
+    }
+    final Circle circle = other;
+    return offset.dx == circle.offset.dx && offset.dy == circle.offset.dy;
   }
 }
 

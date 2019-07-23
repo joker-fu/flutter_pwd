@@ -13,10 +13,16 @@ class CircleItemPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    //没选中小圆
+    //未选中小圆
     final normalCirclePaint = new Paint()
       ..color = itemAttribute.normalColor
       ..style = PaintingStyle.fill;
+
+    //未选中大圆
+    final normalBigCirclePaint = new Paint()
+      ..color = itemAttribute.normalColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = itemAttribute.circleStrokeWidth;
 
     //选中小圆
     final selectedCirclePaint = new Paint()
@@ -39,6 +45,8 @@ class CircleItemPainter extends CustomPainter {
       Circle circle = circleList[i];
       canvas.drawCircle(
           circle.offset, itemAttribute.smallCircleR, normalCirclePaint);
+      canvas.drawCircle(
+          circle.offset, itemAttribute.bigCircleR, normalBigCirclePaint);
       if (circle.isSelected()) {
         canvas.drawCircle(
             circle.offset, itemAttribute.smallCircleR, selectedCirclePaint);

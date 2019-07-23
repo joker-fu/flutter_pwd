@@ -32,7 +32,11 @@ class _MePageState extends State<MePage> {
             height: 10,
           )
         : InkWell(
-            onTap: () => RouteUtils.push(context, SafeSettingPage()),
+            onTap: () {
+              if (index == 1) {
+                RouteUtils.push(context, SafeSettingPage());
+              }
+            },
             child: Container(
               padding: EdgeInsets.symmetric(
                   vertical: Dimens.dp10, horizontal: Dimens.dp16),
