@@ -11,6 +11,8 @@ class _GesturePasswordPageState extends State<GesturePasswordPage> {
   GlobalKey<MiniGesturePasswordState> miniGesturePassword = GlobalKey();
   GlobalKey<ScaffoldState> scaffoldState = GlobalKey<ScaffoldState>();
 
+  String _gesturePassword;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,16 +27,24 @@ class _GesturePasswordPageState extends State<GesturePasswordPage> {
             margin: const EdgeInsets.only(top: 100.0),
             child: MaxGesturePassword(
               successCallback: (s) {
-                print("successCallback$s");
+                Widget contentWidget;
+                if (_gesturePassword == s) {
+                  contentWidget = Text('设置成功');
+                  Navigator.of(context).pop(_gesturePassword);
+                } else if (_gesturePassword == null) {
+                  contentWidget = Text('请再次确认手势');
+                  _gesturePassword = s;
+                } else {
+                  contentWidget = Text('与上次绘制不一致，请重新绘制');
+                }
                 scaffoldState.currentState?.showSnackBar(SnackBar(
-                  content: Text('successCallback:$s'),
+                  content: contentWidget,
                 ));
                 miniGesturePassword.currentState?.setSelected('');
               },
               failCallback: () {
-                print('failCallback');
                 scaffoldState.currentState?.showSnackBar(SnackBar(
-                  content: Text('failCallback'),
+                  content: Text('至少绘制4个点'),
                 ));
                 miniGesturePassword.currentState?.setSelected('');
               },

@@ -1,5 +1,9 @@
 import 'package:local_auth/auth_strings.dart';
 
+class PrefsKeys{
+  static const gesturePassword = "gesturePassword";
+}
+
 class Routers {
   static const String home = 'route_home';
 }

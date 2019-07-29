@@ -35,6 +35,8 @@ dependencies:
   # sqflite https://github.com/tekartik/sqflite
   sqflite: ^1.1.6+2
 
+  # shared_preferences https://github.com/flutter/plugins/tree/master/packages/shared_preferences
+  shared_preferences: ^0.5.3+4
 dev_dependencies:
   flutter_test:
     sdk: flutter

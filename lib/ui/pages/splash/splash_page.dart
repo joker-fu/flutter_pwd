@@ -7,6 +7,7 @@ import 'package:flutter_pwd/ui/widget/common_dialog.dart';
 import 'package:flutter_pwd/utils/router_utils.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -72,16 +73,20 @@ class _SplashPageState extends State<SplashPage> {
     });
   }
 
-  void _initAsync() {
-    Observable.timer(0, Duration(seconds: 3)).listen((data) {
-      print('---------------------$data');
-      RouteUtils.toMainPage(context);
-    });
+  Future _initAsync() async {
+//    Observable.timer(0, Duration(seconds: 3)).listen((data) {
+//      print('---------------------$data');
+//      RouteUtils.toMainPage(context);
+//    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String gesturePassword = prefs.getString(PrefsKeys.gesturePassword);
+    print('------------------------->  $gesturePassword');
   }
 
   @override
   void initState() {
     super.initState();
+    _initAsync();
     _checkBiometrics();
     _getAvailableBiometrics();
     _authenticate();

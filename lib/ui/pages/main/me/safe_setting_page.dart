@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pwd/common/constant/Constants.dart';
 import 'package:flutter_pwd/res/dimens.dart';
 import 'package:flutter_pwd/res/strings.dart';
 import 'package:flutter_pwd/ui/pages/main/me/gesture_password_page.dart';
 import 'package:flutter_pwd/utils/app_utils.dart';
 import 'package:flutter_pwd/utils/router_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SafeSettingPage extends StatefulWidget {
   @override
@@ -43,6 +45,22 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _getGesturePassword();
+  }
+
+  Future _getGesturePassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String gesturePassword = prefs.getString(PrefsKeys.gesturePassword);
+    if (gesturePassword != null && gesturePassword != "") {
+      setState(() {
+        _useGesture = true;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -76,12 +94,21 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
                 _useGesture = value;
               });
               if (_useGesture) {
-                RouteUtils.push(context, GesturePasswordPage());
+                _toGesturePasswordPage(context);
               }
             }),
           ],
         ),
       ),
     );
+  }
+
+  void _toGesturePasswordPage(BuildContext context) {
+    RouteUtils.push(context, GesturePasswordPage()).then((value) async {
+      if (value != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString(PrefsKeys.gesturePassword, value);
+      }
+    });
   }
 }
