@@ -6,6 +6,7 @@ class Ids {
   static const setUnlockMethod = 'set_unlock_method';
   static const fingerprint = 'fingerprint';
   static const gesture = 'gesture';
+  static const pageNameLogin = 'pageNameLogin';
 }
 
 Map<String, Map<String, Map<String, String>>> localizedValues = {
@@ -18,6 +19,7 @@ Map<String, Map<String, Map<String, String>>> localizedValues = {
       Ids.setUnlockMethod: 'Set the unlock method',
       Ids.fingerprint: 'fingerprint',
       Ids.gesture: 'gesture password',
+      Ids.pageNameLogin: 'Login',
     }
   },
   'zh': {
@@ -29,6 +31,7 @@ Map<String, Map<String, Map<String, String>>> localizedValues = {
       Ids.setUnlockMethod: '设置解锁方式',
       Ids.fingerprint: '指纹',
       Ids.gesture: '手势密码',
+      Ids.pageNameLogin: '登录',
     }
   }
 };

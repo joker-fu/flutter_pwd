@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_pwd/common/constant/Constants.dart';
 import 'package:flutter_pwd/res/dimens.dart';
 import 'package:flutter_pwd/ui/widget/gesture/max_gesture_password.dart';
 import 'package:flutter_pwd/ui/widget/gesture/min_gesture_password.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_pwd/utils/prefs_utils.dart';
 
 class GesturePasswordPage extends StatefulWidget {
   static const ACTION_CHECK_GESTURE_PWD = 0;
@@ -42,20 +39,10 @@ class _GesturePasswordPageState extends State<GesturePasswordPage> {
       default:
         break;
     }
-    _getGesturePassword().then((pwd) {
+    PrefsUtils.getGesturePassword().then((pwd) {
       _gesturePassword = pwd;
     });
     super.initState();
-  }
-
-  Future<String> _getGesturePassword() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(PrefsKeys.gesturePassword);
-  }
-
-  void _removeGesturePassword() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove(PrefsKeys.gesturePassword);
   }
 
   @override
@@ -100,7 +87,7 @@ class _GesturePasswordPageState extends State<GesturePasswordPage> {
                     if (_gesturePassword == s) {
                       if (widget.action ==
                           GesturePasswordPage.ACTION_CANCEL_GESTURE_PWD) {
-                        _removeGesturePassword();
+                        PrefsUtils.removeGesturePassword();
                       }
                       Navigator.of(context).pop();
                     } else {

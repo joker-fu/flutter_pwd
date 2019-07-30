@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pwd/common/constant/Constants.dart';
 import 'package:flutter_pwd/res/dimens.dart';
 import 'package:flutter_pwd/res/strings.dart';
 import 'package:flutter_pwd/ui/pages/main/me/gesture_password_page.dart';
 import 'package:flutter_pwd/utils/app_utils.dart';
+import 'package:flutter_pwd/utils/local_auth_utils.dart';
+import 'package:flutter_pwd/utils/prefs_utils.dart';
 import 'package:flutter_pwd/utils/router_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SafeSettingPage extends StatefulWidget {
   @override
@@ -13,6 +13,8 @@ class SafeSettingPage extends StatefulWidget {
 }
 
 class _SafeSettingPageState extends State<SafeSettingPage> {
+  final LocalAuthHelper authHelper = LocalAuthHelper();
+  bool _authCanUse = false;
   bool _useFinger = false;
   bool _useGesture = false;
 
@@ -48,18 +50,24 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
 
   @override
   void initState() {
-    _getGesturePassword();
-    super.initState();
-  }
-
-  void _getGesturePassword() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String gesturePassword = prefs.getString(PrefsKeys.gesturePassword);
-    if (gesturePassword != null && gesturePassword != "") {
+    PrefsUtils.getGesturePassword().then((pwd) {
+      if (pwd != null && pwd != "") {
+        setState(() {
+          _useGesture = true;
+        });
+      }
+    });
+    PrefsUtils.getFingerPassword().then((pwd) {
       setState(() {
-        _useGesture = true;
+        if (pwd != null) {
+          _useFinger = pwd;
+        }
       });
-    }
+    });
+    authHelper.checkBiometrics().then((bool) {
+      _authCanUse = bool;
+    });
+    super.initState();
   }
 
   @override
@@ -82,22 +90,35 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
               ),
               child: Text(AppUtils.getString(context, Ids.setUnlockMethod)),
             ),
-            _renderItem(Icons.fingerprint, Ids.fingerprint, _useFinger,
-                (value) {
-              setState(() {
-                _useFinger = value;
-              });
+            _renderItem(Icons.fingerprint, Ids.fingerprint, _useFinger, (v) {
+              if (_authCanUse) {
+                _toAuthFinger(context, v);
+              } else {
+                print('指纹不能使用！');
+              }
             }),
             Divider(
               height: Dimens.dp1_2,
             ),
-            _renderItem(Icons.apps, Ids.gesture, _useGesture, (value) {
-              _toGesturePasswordPage(context, value);
+            _renderItem(Icons.apps, Ids.gesture, _useGesture, (v) {
+              _toGesturePasswordPage(context, v);
             }),
           ],
         ),
       ),
     );
+  }
+
+  //验证指纹
+  void _toAuthFinger(BuildContext context, bool value) {
+    authHelper.authenticate().then((v) {
+      if (v) {
+        setState(() {
+          _useFinger = value;
+          PrefsUtils.setFingerPassword(value);
+        });
+      }
+    });
   }
 
   //跳转手势密码页
@@ -107,17 +128,15 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
         : GesturePasswordPage.ACTION_CANCEL_GESTURE_PWD;
 
     RouteUtils.push(
-        context,
-        GesturePasswordPage(
-          action: action,
-        )).then((value) async {
+      context,
+      GesturePasswordPage(action: action),
+    ).then((value) async {
       if (value != null) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString(PrefsKeys.gesturePassword, value);
+        PrefsUtils.setGesturePassword(value);
+        setState(() {
+          _useGesture = value != null;
+        });
       }
-      setState(() {
-        _useGesture = value != null;
-      });
     });
   }
 }
