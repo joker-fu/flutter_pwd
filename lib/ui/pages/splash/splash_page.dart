@@ -73,7 +73,7 @@ class _SplashPageState extends State<SplashPage> {
     });
   }
 
-  Future _initAsync() async {
+  void _initAsync() async {
 //    Observable.timer(0, Duration(seconds: 3)).listen((data) {
 //      print('---------------------$data');
 //      RouteUtils.toMainPage(context);

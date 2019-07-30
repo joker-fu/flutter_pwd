@@ -32,7 +32,9 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
               SizedBox(
                 width: Dimens.dp10,
               ),
-              Expanded(child: Text(AppUtils.getString(context, id))),
+              Expanded(
+                child: Text(AppUtils.getString(context, id)),
+              ),
               Switch(
                 value: status,
                 onChanged: onChanged,
@@ -46,11 +48,11 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
 
   @override
   void initState() {
-    super.initState();
     _getGesturePassword();
+    super.initState();
   }
 
-  Future _getGesturePassword() async {
+  void _getGesturePassword() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String gesturePassword = prefs.getString(PrefsKeys.gesturePassword);
     if (gesturePassword != null && gesturePassword != "") {
@@ -90,12 +92,7 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
               height: Dimens.dp1_2,
             ),
             _renderItem(Icons.apps, Ids.gesture, _useGesture, (value) {
-              setState(() {
-                _useGesture = value;
-              });
-              if (_useGesture) {
-                _toGesturePasswordPage(context);
-              }
+              _toGesturePasswordPage(context, value);
             }),
           ],
         ),
@@ -103,12 +100,24 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
     );
   }
 
-  void _toGesturePasswordPage(BuildContext context) {
-    RouteUtils.push(context, GesturePasswordPage()).then((value) async {
+  //跳转手势密码页
+  void _toGesturePasswordPage(BuildContext context, bool value) {
+    int action = value
+        ? GesturePasswordPage.ACTION_SETTING_GESTURE_PWD
+        : GesturePasswordPage.ACTION_CANCEL_GESTURE_PWD;
+
+    RouteUtils.push(
+        context,
+        GesturePasswordPage(
+          action: action,
+        )).then((value) async {
       if (value != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString(PrefsKeys.gesturePassword, value);
       }
+      setState(() {
+        _useGesture = value != null;
+      });
     });
   }
 }

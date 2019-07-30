@@ -1,8 +1,21 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_pwd/common/constant/Constants.dart';
+import 'package:flutter_pwd/res/dimens.dart';
 import 'package:flutter_pwd/ui/widget/gesture/max_gesture_password.dart';
 import 'package:flutter_pwd/ui/widget/gesture/min_gesture_password.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GesturePasswordPage extends StatefulWidget {
+  static const ACTION_CHECK_GESTURE_PWD = 0;
+  static const ACTION_SETTING_GESTURE_PWD = 1;
+  static const ACTION_CANCEL_GESTURE_PWD = 2;
+
+  final int action;
+
+  GesturePasswordPage({Key key, @required this.action}) : super(key: key);
+
   @override
   _GesturePasswordPageState createState() => _GesturePasswordPageState();
 }
@@ -11,36 +24,105 @@ class _GesturePasswordPageState extends State<GesturePasswordPage> {
   GlobalKey<MiniGesturePasswordState> miniGesturePassword = GlobalKey();
   GlobalKey<ScaffoldState> scaffoldState = GlobalKey<ScaffoldState>();
 
+  String _tips = "";
   String _gesturePassword;
+
+  @override
+  void initState() {
+    switch (widget.action) {
+      case GesturePasswordPage.ACTION_CHECK_GESTURE_PWD:
+        _tips = "验证手势密码";
+        break;
+      case GesturePasswordPage.ACTION_SETTING_GESTURE_PWD:
+        _tips = "绘制解锁图案"; //再次绘制解锁图案
+        break;
+      case GesturePasswordPage.ACTION_CANCEL_GESTURE_PWD:
+        _tips = "请绘制原解锁图案";
+        break;
+      default:
+        break;
+    }
+    _getGesturePassword().then((pwd) {
+      _gesturePassword = pwd;
+    });
+    super.initState();
+  }
+
+  Future<String> _getGesturePassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(PrefsKeys.gesturePassword);
+  }
+
+  void _removeGesturePassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(PrefsKeys.gesturePassword);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldState,
       appBar: AppBar(
-        title: Text('Plugin example app'),
+        title: Text('手势密码'),
       ),
       body: Column(
         children: <Widget>[
+          SizedBox(
+            height: Dimens.dp20,
+          ),
           Center(child: MiniGesturePassword(key: miniGesturePassword)),
+          SizedBox(
+            height: Dimens.dp20,
+          ),
+          Text(_tips),
           Container(
-            margin: const EdgeInsets.only(top: 100.0),
+            margin: const EdgeInsets.only(top: Dimens.dp50),
             child: MaxGesturePassword(
               successCallback: (s) {
                 Widget contentWidget;
-                if (_gesturePassword == s) {
-                  contentWidget = Text('设置成功');
-                  Navigator.of(context).pop(_gesturePassword);
-                } else if (_gesturePassword == null) {
-                  contentWidget = Text('请再次确认手势');
-                  _gesturePassword = s;
-                } else {
-                  contentWidget = Text('与上次绘制不一致，请重新绘制');
+                switch (widget.action) {
+                  case GesturePasswordPage.ACTION_SETTING_GESTURE_PWD:
+                    if (_gesturePassword == s) {
+                      contentWidget = Text('设置成功');
+                      Navigator.of(context).pop(_gesturePassword);
+                    } else if (_gesturePassword == null) {
+                      contentWidget = Text('请再次确认手势');
+                      _gesturePassword = s;
+                      setState(() {
+                        _tips = "再次绘制解锁图案";
+                      });
+                    } else {
+                      contentWidget = Text('与上次绘制不一致，请重新绘制');
+                    }
+                    break;
+                  case GesturePasswordPage.ACTION_CHECK_GESTURE_PWD:
+                  case GesturePasswordPage.ACTION_CANCEL_GESTURE_PWD:
+                    if (_gesturePassword == s) {
+                      if (widget.action ==
+                          GesturePasswordPage.ACTION_CANCEL_GESTURE_PWD) {
+                        _removeGesturePassword();
+                      }
+                      Navigator.of(context).pop();
+                    } else {
+                      contentWidget = Text('手势错误');
+                    }
+                    miniGesturePassword.currentState?.setSelected('');
+                    break;
+                  default:
+                    break;
                 }
+//                if (_gesturePassword == s) {
+//                  contentWidget = Text('设置成功');
+//                  Navigator.of(context).pop(_gesturePassword);
+//                } else if (_gesturePassword == null) {
+//                  contentWidget = Text('请再次确认手势');
+//                  _gesturePassword = s;
+//                } else {
+//                  contentWidget = Text('与上次绘制不一致，请重新绘制');
+//                }
                 scaffoldState.currentState?.showSnackBar(SnackBar(
                   content: contentWidget,
                 ));
-                miniGesturePassword.currentState?.setSelected('');
               },
               failCallback: () {
                 scaffoldState.currentState?.showSnackBar(SnackBar(

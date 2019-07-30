@@ -37,25 +37,30 @@ class HomePageState extends State<HomePage> {
                 Text(
                   item.title,
                   style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: Dimens.sp18,
-                      fontWeight: FontWeight.w400),
+                    color: Colors.grey,
+                    fontSize: Dimens.sp18,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
                 SizedBox(
                   height: Dimens.dp16,
                 ),
                 Text(
                   '账号：${item.account}',
-                  style:
-                      TextStyle(color: Colors.black87, fontSize: Dimens.sp16),
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: Dimens.sp16,
+                  ),
                 ),
                 SizedBox(
                   height: Dimens.dp8,
                 ),
                 Text(
                   '密码：${item.visible ? item.password : '********'}',
-                  style:
-                      TextStyle(color: Colors.black87, fontSize: Dimens.sp16),
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: Dimens.sp16,
+                  ),
                 ),
               ],
             ),
@@ -98,7 +103,9 @@ class HomePageState extends State<HomePage> {
           setState(() {
             _data.remove(item);
           });
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('删除成功')));
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text('删除成功'),
+          ));
         });
       },
     );
@@ -113,7 +120,9 @@ class HomePageState extends State<HomePage> {
           setState(() {
             _data.remove(item);
           });
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('删除成功')));
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text('删除成功'),
+          ));
         });
       },
     );

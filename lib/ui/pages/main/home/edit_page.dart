@@ -89,9 +89,13 @@ class _EditPageState extends State<EditPage> {
                         decoration: InputDecoration(
                           labelText: '网站/应用信息',
                           hintText: '请输入网站/应用信息',
-                          labelStyle: TextStyle(fontSize: Dimens.sp16),
+                          labelStyle: TextStyle(
+                            fontSize: Dimens.sp16,
+                          ),
                           hintStyle: TextStyle(
-                              color: Colors.grey, fontSize: Dimens.sp16),
+                            color: Colors.grey,
+                            fontSize: Dimens.sp16,
+                          ),
                         ),
                       ),
                     ),
@@ -111,9 +115,13 @@ class _EditPageState extends State<EditPage> {
                         decoration: InputDecoration(
                           labelText: '账号',
                           hintText: '账号',
-                          labelStyle: TextStyle(fontSize: Dimens.sp16),
+                          labelStyle: TextStyle(
+                            fontSize: Dimens.sp16,
+                          ),
                           hintStyle: TextStyle(
-                              color: Colors.grey, fontSize: Dimens.sp16),
+                            color: Colors.grey,
+                            fontSize: Dimens.sp16,
+                          ),
                         ),
                       ),
                     ),
@@ -136,9 +144,13 @@ class _EditPageState extends State<EditPage> {
                         decoration: InputDecoration(
                             labelText: '密码',
                             hintText: '密码',
-                            labelStyle: TextStyle(fontSize: Dimens.sp16),
+                            labelStyle: TextStyle(
+                              fontSize: Dimens.sp16,
+                            ),
                             hintStyle: TextStyle(
-                                color: Colors.grey, fontSize: Dimens.sp16),
+                              color: Colors.grey,
+                              fontSize: Dimens.sp16,
+                            ),
                             suffixIcon: IconButton(
                                 icon: Icon(
                                   Icons.remove_red_eye,
@@ -162,7 +174,10 @@ class _EditPageState extends State<EditPage> {
                   value: _isHide,
                   title: Text(
                     '隐藏密码：',
-                    style: TextStyle(color: Colors.grey, fontSize: Dimens.sp14),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: Dimens.sp14,
+                    ),
                   ),
                   onChanged: (bool) {
                     setState(() {

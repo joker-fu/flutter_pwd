@@ -39,12 +39,16 @@ class _MePageState extends State<MePage> {
             },
             child: Container(
               padding: EdgeInsets.symmetric(
-                  vertical: Dimens.dp10, horizontal: Dimens.dp16),
+                vertical: Dimens.dp10,
+                horizontal: Dimens.dp16,
+              ),
               height: Dimens.dp50,
               color: Colors.white,
               child: Row(
                 children: <Widget>[
-                  Expanded(child: Text(routeNames.elementAt(index))),
+                  Expanded(
+                    child: Text(routeNames.elementAt(index)),
+                  ),
                   Icon(
                     Icons.keyboard_arrow_right,
                     color: Colors.grey,
