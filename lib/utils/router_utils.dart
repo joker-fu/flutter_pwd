@@ -11,6 +11,12 @@ class RouteUtils {
   }
 
   static Future<dynamic> push(BuildContext context, Widget page) {
-    return Navigator.of(context).push(MaterialPageRoute(builder: (context) => page));
+    return Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => page));
+  }
+
+  static Future<dynamic> pushAndRemove(BuildContext context, Widget page) {
+    return Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => page), (Route router) => false);
   }
 }

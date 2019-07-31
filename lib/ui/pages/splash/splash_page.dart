@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_pwd/ui/pages/login/login_page.dart';
 import 'package:flutter_pwd/utils/prefs_utils.dart';
@@ -11,6 +13,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   bool _gPwd = false;
   bool _fPwd = false;
+  Timer _timer;
 
   Future _initAsync() async {
 //    Observable.timer(0, Duration(seconds: 3)).listen((data) {
@@ -21,15 +24,22 @@ class _SplashPageState extends State<SplashPage> {
       return pwd != null && pwd != "";
     });
     _fPwd = await PrefsUtils.getFingerPassword();
-    Duration(seconds: 3);
   }
 
   @override
   void initState() {
-    super.initState();
     _initAsync().then((_) {
-      RouteUtils.push(context, LoginPage(gPwd: _gPwd, fPwd: _fPwd));
+      _timer = Timer(Duration(seconds: 3), () {
+        RouteUtils.pushAndRemove(context, LoginPage(gPwd: _gPwd, fPwd: _fPwd));
+      });
     });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
