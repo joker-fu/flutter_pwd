@@ -1,3 +1,4 @@
+import 'package:flutter_pwd/utils/crypto_utils.dart';
 import 'package:sqflite/sqflite.dart';
 
 final String tablePw = "_pw";
@@ -64,7 +65,9 @@ class PasswordProvider {
     if (db == null) {
       await open();
     }
+    item.password = await CryptoUtils.encrypt(item.password);
     item.id = await db.insert(tablePw, item.toMap());
+    item.password = await CryptoUtils.decrypt(item.password);
     return item;
   }
 
@@ -77,7 +80,9 @@ class PasswordProvider {
         where: "$cTitle = ?",
         whereArgs: [item.title]);
     if (maps.isNotEmpty) {
-      return PasswordItem.fromMap(maps.first);
+      PasswordItem item = PasswordItem.fromMap(maps.first);
+      item.password = await CryptoUtils.decrypt(item.password);
+      return item;
     }
     return null;
   }
@@ -91,7 +96,9 @@ class PasswordProvider {
     if (maps.length > 0) {
       List<PasswordItem> list = List();
       for (int i = maps.length; i > 0; i--) {
-        list.add(PasswordItem.fromMap(maps[i - 1]));
+        PasswordItem item = PasswordItem.fromMap(maps[i - 1]);
+        item.password = await CryptoUtils.decrypt(item.password);
+        list.add(item);
       }
 
       return list;
@@ -110,7 +117,10 @@ class PasswordProvider {
     if (db == null) {
       await open();
     }
-    return await db
+    item.password = await CryptoUtils.encrypt(item.password);
+    int count = await db
         .update(tablePw, item.toMap(), where: "$cId = ?", whereArgs: [item.id]);
+    item.password = await CryptoUtils.decrypt(item.password);
+    return count;
   }
 }

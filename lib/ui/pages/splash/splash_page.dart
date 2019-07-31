@@ -23,14 +23,20 @@ class _SplashPageState extends State<SplashPage> {
     _gPwd = await PrefsUtils.getGesturePassword().then((pwd) {
       return pwd != null && pwd != "";
     });
-    _fPwd = await PrefsUtils.getFingerPassword();
+    _fPwd = await PrefsUtils.getFingerPassword().then((pwd) {
+      return pwd != null && pwd;
+    });
   }
 
   @override
   void initState() {
     _initAsync().then((_) {
       _timer = Timer(Duration(seconds: 3), () {
-        RouteUtils.pushAndRemove(context, LoginPage(gPwd: _gPwd, fPwd: _fPwd));
+        if (!_gPwd && !_fPwd) {
+          RouteUtils.toMainPage(context);
+        } else {
+          RouteUtils.pushAndRemove(context, LoginPage(gPwd: _gPwd, fPwd: _fPwd));
+        }
       });
     });
     super.initState();

@@ -131,6 +131,9 @@ class _SafeSettingPageState extends State<SafeSettingPage> {
       context,
       GesturePasswordPage(action: action),
     ).then((value) async {
+      setState(() {
+        _useGesture = value != null;
+      });
       if (value != null) {
         PrefsUtils.setGesturePassword(value);
         setState(() {

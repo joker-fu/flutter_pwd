@@ -37,6 +37,13 @@ dependencies:
 
   # shared_preferences https://github.com/flutter/plugins/tree/master/packages/shared_preferences
   shared_preferences: ^0.5.3+4
+
+  # crypto https://pub.flutter-io.cn/packages/crypto
+  # crypto: ^2.0.6
+
+  # cipher2 https://pub.dev/packages/cipher2
+  cipher2: ^0.3.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

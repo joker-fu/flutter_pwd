@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pwd/model/bean/password_item.dart';
@@ -6,6 +8,10 @@ import 'package:flutter_pwd/res/strings.dart';
 import 'package:flutter_pwd/utils/app_utils.dart';
 
 class EditPage extends StatefulWidget {
+  final PasswordItem passwordItem;
+
+  EditPage({Key key, this.passwordItem}) : super(key: key);
+
   @override
   _EditPageState createState() => _EditPageState();
 }
@@ -27,22 +33,51 @@ class _EditPageState extends State<EditPage> {
       String info = _infoController.value.text.toString().trim();
       String account = _accountController.value.text.toString().trim();
       String pwd = _passwordController.value.text.toString().trim();
-      _pwProvider
-          .insert(PasswordItem(info, account, pwd, !_isHide))
-          .then((value) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('${value.title}添加成功'),
-        ));
-        Navigator.of(context).pop(value);
-      });
+      if (widget.passwordItem != null) {
+        widget.passwordItem.title = info;
+        widget.passwordItem.account = account;
+        widget.passwordItem.password = pwd;
+        widget.passwordItem.visible = !_isHide;
+        _pwProvider.update(widget.passwordItem).then((count) {
+          if (count == 1) {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('${widget.passwordItem.title}修改成功'),
+            ));
+            Timer(Duration(seconds: 2), () {
+              Navigator.of(context).pop(widget.passwordItem);
+            });
+          } else {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text('${widget.passwordItem.title}修改失败'),
+            ));
+          }
+        });
+      } else {
+        _pwProvider
+            .insert(PasswordItem(info, account, pwd, !_isHide))
+            .then((value) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text('${value.title}添加成功'),
+          ));
+          Timer(Duration(seconds: 2), () {
+            Navigator.of(context).pop(value);
+          });
+        });
+      }
     }
   }
 
-//  @override
-//  void initState() {
-//    super.initState();
+  @override
+  void initState() {
+    _infoController.text = widget.passwordItem.title ?? '';
+    _accountController.text = widget.passwordItem.account ?? '';
+    _passwordController.text = widget.passwordItem.password ?? '';
+    _isHide = !widget.passwordItem.visible ?? false;
+    _isObscure = _isHide;
+    _eyeColor = !_isObscure ? Colors.blue : Colors.grey;
+    super.initState();
 //    _pwProvider.open();
-//  }
+  }
 
   @override
   void dispose() {

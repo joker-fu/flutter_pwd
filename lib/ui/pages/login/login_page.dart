@@ -70,39 +70,39 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               widget.gPwd
-                      ? MaxGesturePassword(
-                successCallback: (s) {
-                  _authGesture(s);
-                },
-                failCallback: () {
-                  CommonDialog.show(context, Text('验证失败！'));
-                },
-              )
-                      : Container(),
+                  ? MaxGesturePassword(
+                      successCallback: (s) {
+                        _authGesture(s);
+                      },
+                      failCallback: () {
+                        CommonDialog.show(context, Text('验证失败！'));
+                      },
+                    )
+                  : Container(),
               SizedBox(
                 height: Dimens.dp20,
               ),
               widget.fPwd
-                      ? Column(
-                children: <Widget>[
-                  IconButton(
-                    iconSize: Dimens.dp40,
-                    onPressed: () => _authFinger(),
-                    icon: Icon(
-                      Icons.fingerprint,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  Text(
-                    '点击进行指纹解锁',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: Dimens.sp12,
-                    ),
-                  )
-                ],
-              )
-                      : Container()
+                  ? Column(
+                      children: <Widget>[
+                        IconButton(
+                          iconSize: Dimens.dp40,
+                          onPressed: () => _authFinger(),
+                          icon: Icon(
+                            Icons.fingerprint,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        Text(
+                          '点击进行指纹解锁',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: Dimens.sp12,
+                          ),
+                        )
+                      ],
+                    )
+                  : Container()
             ],
           ),
         ),

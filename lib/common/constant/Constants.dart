@@ -1,12 +1,20 @@
 import 'package:local_auth/auth_strings.dart';
 
-class PrefsKeys{
+///
+class PrefsKeys {
   static const gesturePassword = "gesturePassword";
   static const fingerPassword = "fingerPassword";
 }
 
+///
 class Routers {
   static const String home = 'route_home';
+}
+
+/// AES加密 KEY IV
+class Crypto {
+  static const String CRYPTO_AES_KEY = 'bcdefg.hijklmnop';
+  static const String CRYPTO_AES_IV = 'ponmlkjih.gfedcb';
 }
 
 const androidAuthStrings = const AndroidAuthMessages(
