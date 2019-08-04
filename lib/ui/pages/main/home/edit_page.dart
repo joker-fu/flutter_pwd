@@ -69,12 +69,14 @@ class _EditPageState extends State<EditPage> {
 
   @override
   void initState() {
-    _infoController.text = widget.passwordItem.title ?? '';
-    _accountController.text = widget.passwordItem.account ?? '';
-    _passwordController.text = widget.passwordItem.password ?? '';
-    _isHide = !widget.passwordItem.visible ?? false;
-    _isObscure = _isHide;
-    _eyeColor = !_isObscure ? Colors.blue : Colors.grey;
+    if (widget.passwordItem != null) {
+      _infoController.text = widget.passwordItem.title ?? '';
+      _accountController.text = widget.passwordItem.account ?? '';
+      _passwordController.text = widget.passwordItem.password ?? '';
+      _isHide = !widget.passwordItem.visible ?? false;
+      _isObscure = _isHide;
+      _eyeColor = !_isObscure ? Colors.blue : Colors.grey;
+    }
     super.initState();
 //    _pwProvider.open();
   }
