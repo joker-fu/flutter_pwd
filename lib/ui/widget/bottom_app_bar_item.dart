@@ -24,9 +24,9 @@ class BottomAppBarItem extends StatefulWidget {
 class _BottomAppBarItemState extends State<BottomAppBarItem> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapUp: (_) => _tap(),
-      onLongPressEnd: (_) => _tap(),
+    return InkWell(
+      onTap: () => _tap(),
+      onDoubleTap: () => _tap(),
       child: Container(
         height: Dimens.dp56,
         width: Dimens.dp100,
