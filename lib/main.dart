@@ -10,13 +10,21 @@ import 'package:flutter_pwd/common/constant/Constants.dart';
 import 'package:flutter_pwd/utils/app_utils.dart';
 import 'common/localization/app_localizations.dart';
 
-void main(){
-  runApp(MyApp());
+void main() {
+  // flutter 版本升级至v1.12.13+hotfix.5后，在runApp()之前调用，否则启动App会白屏
+  WidgetsFlutterBinding.ensureInitialized();
   //去掉状态栏透明层
   if (Platform.isAndroid) {
     var style = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(style);
   }
+  // 限制竖屏
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatefulWidget {
