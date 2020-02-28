@@ -3,9 +3,8 @@ import 'package:flutter_pwd/model/bean/password_item.dart';
 import 'package:flutter_pwd/ui/pages/main/home/edit_page.dart';
 import 'package:flutter_pwd/ui/widget/common_card.dart';
 import 'package:flutter_pwd/ui/widget/common_dialog.dart';
+import 'package:flutter_pwd/ui/widget/item_password_widget.dart';
 import 'package:flutter_pwd/utils/router_utils.dart';
-
-import '../../../../res/dimens.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -14,10 +13,39 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   PasswordProvider _pwProvider = PasswordProvider();
 
   List<PasswordItem> _data = List();
+
+  @override
+  void initState() {
+    super.initState();
+    _pwProvider.queryAll().then((list) {
+      setState(() {
+        _data = list ?? List();
+      });
+    }).catchError((e) {
+      print('${e.toString()}');
+    });
+  }
+
+  @override
+  void dispose() {
+    _pwProvider.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Scaffold(
+      body: ListView.builder(
+        itemBuilder: _renderItem,
+        itemCount: _data == null ? 0 : _data.length,
+      ),
+    );
+  }
 
   void addData(PasswordItem element) {
     setState(() {
@@ -41,80 +69,20 @@ class HomePageState extends State<HomePage> {
     PasswordItem item = _data[index];
     return CommonCard(
       child: InkWell(
-          onTap: () => _tap(context, item),
-          onLongPress: () => _longPress(context, item),
-          child: Padding(
-            padding: EdgeInsets.all(Dimens.dp12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  item.title,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: Dimens.sp18,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                SizedBox(
-                  height: Dimens.dp16,
-                ),
-                Text(
-                  '账号：${item.account}',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: Dimens.sp16,
-                  ),
-                ),
-                SizedBox(
-                  height: Dimens.dp8,
-                ),
-                Text(
-                  '密码：${item.visible ? item.password : '********'}',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: Dimens.sp16,
-                  ),
-                ),
-              ],
-            ),
-          )),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _pwProvider.queryAll().then((list) {
-      setState(() {
-        _data = list ?? List();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _pwProvider.close();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView.builder(
-        itemBuilder: _renderItem,
-        itemCount: _data == null ? 0 : _data.length,
+        onTap: () => _onTap(context, item),
+        onLongPress: () => _onLongPress(context, item),
+        child: ItemPasswordWidget(item),
       ),
     );
   }
 
-  void _tap(BuildContext context, PasswordItem item) {
+  void _onTap(BuildContext context, PasswordItem item) {
     RouteUtils.push(context, EditPage(passwordItem: item)).then((value) {
       if (value != null) updateData(value);
     });
   }
 
-  void _longPress(BuildContext context, PasswordItem item) {
+  void _onLongPress(BuildContext context, PasswordItem item) {
     CommonDialog.show(
       context,
       Text('确定删除${item.title}记录'),
@@ -130,4 +98,18 @@ class HomePageState extends State<HomePage> {
       },
     );
   }
+
+  void toSearch(String content) {
+    _pwProvider.query(content).then((list) {
+      setState(() {
+        _data.clear();
+        _data.addAll(list ?? []);
+      });
+    }).catchError((e) {
+      print('${e.toString()}');
+    });
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }

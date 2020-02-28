@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 final String tablePw = "_pw";
 final String cId = "_id";
 final String cTitle = "title";
+final String cUrl = "url";
 final String cAccount = "account";
 final String cPassword = "password";
 final String cVisible = "visible";
@@ -11,15 +12,17 @@ final String cVisible = "visible";
 class PasswordItem {
   int id;
   String title;
+  String url;
   String account;
   String password;
   bool visible;
 
-  PasswordItem(this.title, this.account, this.password, this.visible);
+  PasswordItem(this.title, this.url, this.account, this.password, this.visible);
 
   PasswordItem.fromMap(Map map) {
     id = map[cId] as int;
     title = map[cTitle] as String;
+    url = map[cUrl] as String;
     account = map[cAccount] as String;
     password = map[cPassword] as String;
     visible = map[cVisible] == 1;
@@ -28,6 +31,7 @@ class PasswordItem {
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       cTitle: title,
+      cUrl: url,
       cAccount: account,
       cPassword: password,
       cVisible: visible == true ? 1 : 0,
@@ -48,6 +52,7 @@ class PasswordProvider {
         create table $tablePw ( 
           $cId integer primary key autoincrement, 
           $cTitle text not null,
+          $cUrl text,
           $cAccount text not null,
           $cPassword text not null,
           $cVisible integer not null)
@@ -71,28 +76,36 @@ class PasswordProvider {
     return item;
   }
 
-  Future<PasswordItem> query(PasswordItem item) async {
-    if (db == null) {
-      await open();
+  Future<List<PasswordItem>> query(String content) async {
+    if (content.isNotEmpty) {
+      if (db == null) {
+        await open();
+      }
+      List<Map<String, dynamic>> maps = await db.query(tablePw,
+          columns: [cId, cTitle, cUrl, cAccount, cPassword, cVisible],
+          where: "$cTitle like ? or $cUrl like ? or $cAccount like ? ",
+          whereArgs: ['%$content%', '%$content%', '%$content%']);
+      if (maps.isNotEmpty) {
+        List<PasswordItem> items = [];
+        for (var value in maps) {
+          PasswordItem item = PasswordItem.fromMap(value);
+          item.password = await CryptoUtils.decrypt(item.password);
+          items.add(item);
+        }
+        return items;
+      }
+      return null;
+    } else {
+      return queryAll();
     }
-    List<Map<String, dynamic>> maps = await db.query(tablePw,
-        columns: [cId, cTitle, cAccount, cPassword, cVisible],
-        where: "$cTitle = ?",
-        whereArgs: [item.title]);
-    if (maps.isNotEmpty) {
-      PasswordItem item = PasswordItem.fromMap(maps.first);
-      item.password = await CryptoUtils.decrypt(item.password);
-      return item;
-    }
-    return null;
   }
 
   Future<List<PasswordItem>> queryAll() async {
     if (db == null) {
       await open();
     }
-    List<Map<String, dynamic>> maps = await db
-        .query(tablePw, columns: [cId, cTitle, cAccount, cPassword, cVisible]);
+    List<Map<String, dynamic>> maps = await db.query(tablePw,
+        columns: [cId, cTitle, cUrl, cAccount, cPassword, cVisible]);
     if (maps.length > 0) {
       List<PasswordItem> list = List();
       for (int i = maps.length; i > 0; i--) {

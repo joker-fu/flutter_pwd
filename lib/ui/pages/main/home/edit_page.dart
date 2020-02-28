@@ -54,7 +54,7 @@ class _EditPageState extends State<EditPage> {
         });
       } else {
         _pwProvider
-            .insert(PasswordItem(info, account, pwd, !_isHide))
+            .insert(PasswordItem(info, '', account, pwd, !_isHide))
             .then((value) {
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text('${value.title}添加成功'),
@@ -118,7 +118,7 @@ class _EditPageState extends State<EditPage> {
                     Expanded(
                       child: TextFormField(
                         controller: _infoController,
-                        autofocus: true,
+                        autofocus: false,
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
                         validator: (value) =>
@@ -146,6 +146,7 @@ class _EditPageState extends State<EditPage> {
                     Expanded(
                       child: TextFormField(
                         controller: _accountController,
+                        autofocus: false,
                         validator: (value) => value.isEmpty ? '请输入账号' : null,
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
@@ -172,6 +173,7 @@ class _EditPageState extends State<EditPage> {
                     Expanded(
                       child: TextFormField(
                         controller: _passwordController,
+                        autofocus: false,
                         obscureText: _isObscure,
                         validator: (value) => value.isEmpty ? '请输入密码' : null,
                         scrollPadding: EdgeInsets.all(10),

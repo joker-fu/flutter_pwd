@@ -8,9 +8,10 @@ class MePage extends StatefulWidget {
   _MePageState createState() => _MePageState();
 }
 
-class _MePageState extends State<MePage> {
+class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListView.separated(
       separatorBuilder: (context, index) => Divider(
         height: Dimens.dp1_2,
@@ -57,6 +58,10 @@ class _MePageState extends State<MePage> {
               ),
             ));
   }
+
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 const routeNames = ["", "安全设置", "关于"];
